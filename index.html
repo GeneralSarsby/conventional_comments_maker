@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF8">
+<title>Conventional Comment Maker</title>
+<style>
+
+#inputsubject, #inputdiscussion {
+  width:100%;
+}
+
+textarea {
+  font-family: sans-serif;
+  font-size: small;
+  width:100%;
+}
+
+label {
+  font-family: sans-serif;
+}
+legend {
+  font-family: sans-serif;
+  font-weight: 800;
+}
+fieldset{max-width: 30em;
+border-radius: 5px;}
+
+body {
+  color: white;
+  background-color: #333333;
+  font-family: sans-serif;
+  font-size:small;
+}
+
+button {
+ margin:auto;
+  width: 40%;
+  font-weight: bold;
+  left: 30%;
+  position:relative;
+}
+
+#mainframe {
+  margin:auto;
+  max-width: 30em;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+h1 {
+  margin-top:0;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+a {
+  color:lightblue
+}
+
+</style>
+
+</head>
+<body>
+    <div id="mainframe">
+<h1>Conventional Comment Maker</h1>
+
+<fieldset>
+<legend>Label:</legend>
+<input type="radio" id="praise" name="labeloption" value="praise">      <label for="praise"> Praise</label><br>
+<input type="radio" id="nitpick" name="labeloption" value="nitpick">      <label for="nitpick"> Nitpick</label><br>
+<input type="radio" id="suggestion" name="labeloption" value="suggestion">      <label for="suggestion"> Suggestion</label><br>
+<input type="radio" id="issue" name="labeloption" value="issue">      <label for="issue"> Issue</label><br>
+<input type="radio" id="question" name="labeloption" value="question">      <label for="question"> Question</label><br>
+<input type="radio" id="thought" name="labeloption" value="thought" >      <label for="thought"> Thought</label><br>
+<input type="radio" id="chore" name="labeloption" value="chore" >      <label for="chore"> Chore</label><br>
+<input type="radio" id="nitpick" name="labeloption" value="nitpick">      <label for="nitpick"> Nitpick</label><br>
+<input type="radio" id="otherLabel" name="labeloption" value="otherLabel">      <label for="otherLabel"> Other:</label> <input type="text" id="inputOtherLabel"><br>
+</fieldset>
+
+<fieldset>
+<legend>Decorations (any-optional):</legend>
+<input type="checkbox" id="if-minor" name="decorationoption" value="if-minor">      <label for="if-minor">if-minor</label><br>
+<input type="checkbox" id="important" name="decorationoption" value="important">      <label for="important">important</label><br>
+<input type="checkbox" id="fun" name="decorationoption" value="fun">      <label for="fun">fun</label><br>
+<input type="checkbox" id="blocking" name="decorationoption" value="blocking">      <label for="blocking">blocking</label><br>
+<input type="checkbox" id="non-blocking" name="decorationoption" value="non-blocking">      <label for="non-blocking">non-blocking</label><br>
+<input type="checkbox" id="test" name="decorationoption" value="test">      <label for="test">test</label><br>
+<input type="checkbox" id="security" name="decorationoption" value="security">      <label for="security">security</label><br>
+<input type="checkbox" id="saftey" name="decorationoption" value="saftey">      <label for="saftey">saftey</label><br>
+</fieldset>
+
+<fieldset>
+<legend>Subject:</legend>
+<input type="text" id='inputsubject' width="30em"><br>
+</fieldset>
+
+<fieldset>
+<legend>Discussion (optional):</legend>
+<textarea width="30em" id='inputdiscussion'></textarea><br>
+</fieldset>
+
+<p>
+<button onclick="makeTweet()">Make</button>
+</p>
+
+<textarea width="30em" height='8' id='outputbox'>
+</textarea>
+<p>Copy this to wherever you want to have a conventional comment.</p>
+<p>Inspiration: <a href="https://conventionalcomments.org/">conventionalcomments.org/</a></p>
+</div>
+</body>
+<script>
+"use strict";
+
+
+function translate(char){
+    var diff;
+    if (/[A-Z]/.test(char)){
+        diff = "𝗔".codePointAt(0) - "A".codePointAt(0);
+    } else {
+        diff = "𝗮".codePointAt(0) - "a".codePointAt(0);
+    }
+    return String.fromCodePoint(char.codePointAt(0) + diff);
+}
+function makeBold(text){
+    return  text.replace (/[A-Za-z]/g, translate);
+}
+
+
+function makeTweet(){
+    
+    var checkedValue = null; 
+    var inputElements = document.getElementsByName('labeloption');
+    for(var i=0; inputElements[i]; ++i){
+          if(inputElements[i].checked){
+               checkedValue = inputElements[i].value;
+               break;
+          }
+    }
+    if (checkedValue === 'otherLabel'){
+        checkedValue = document.getElementById('inputOtherLabel').value;
+    }
+    
+    var label = makeBold(checkedValue)+' ';
+    
+    var checkedValues = []; 
+    var inputElements = document.getElementsByName('decorationoption');
+    for(var i=0; inputElements[i]; ++i){
+          if(inputElements[i].checked){
+               checkedValues.push(inputElements[i].value);
+          }
+    }
+    var decoration = ''
+    if (checkedValues.length !== 0){
+        decoration = '('+checkedValues.map(makeBold).join(', ')+') ';
+    }
+    
+    var subject =document.getElementById('inputsubject').value;
+    
+    var discussion = '';
+    
+    var inputdiscussion = document.getElementById('inputdiscussion').value;
+    if (inputdiscussion.length > 1){
+        discussion = '\n\n' + inputdiscussion
+    }
+    
+    document.getElementById("outputbox").value = label + decoration + subject + discussion;
+    
+    
+    
+    
+}
+</script>
